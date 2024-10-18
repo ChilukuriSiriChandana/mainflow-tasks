@@ -1,46 +1,74 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import MovieCard from './MovieCard';
+import axios from 'axios';
+import '../node_modules/bootstrap-icons/font/bootstrap-icons.css';
 
 function App() {
-  const movieData = {
-    
-"Title":"Guardians of the Galaxy Vol. 2",
-"Year":"2017",
-"Rated":"PG-13",
-"Released":"05 May 2017",
-"Runtime":"136 min",
-"Genre":"Action, Adventure, Comedy",
-"Director":"James Gunn",
-"Writer":"James Gunn, Dan Abnett, Andy Lanning",
-"Actors":"Chris Pratt, Zoe Saldana, Dave Bautista",
-"Plot":"The Guardians struggle to keep together as a team while dealing with their personal family issues, notably Star-Lord's encounter with his father, the ambitious celestial being Ego.",
-"Language":"English",
-"Country":"United States",
-"Awards":"Nominated for 1 Oscar. 15 wins & 60 nominations total",
-"Poster":"https://m.media-amazon.com/images/M/MV5BNWE5MGI3MDctMmU5Ni00YzI2LWEzMTQtZGIyZDA5MzQzNDBhXkEyXkFqcGc@._V1_SX300.jpg",
-"Ratings":[{"Source":"Internet Movie Database","Value":"7.6/10"},
-			{"Source":"Rotten Tomatoes","Value":"85%"},
-			{"Source":"Metacritic","Value":"67/100"}],
-"Metascore":"67",
-"imdbRating":"7.6",
-"imdbVotes":"774,852",
-"imdbID":"tt3896198",
-"Type":"movie",
-"DVD":"N/A",
-"BoxOffice":"$389,813,101",
-"Production":"N/A",
-"Website":"N/A",
-"Response":"True"
+  const [movieData, setMovieData] = useState([]);
+  const [search, setSearch] = useState('');
+  const apiKey = 'e34e39ce';
 
+  const getMovieData = (query) => {
+    const searchQuery = query ? `&s=${query}` : '&s=batman';
+    axios
+      .get(`http://www.omdbapi.com/?apikey=${apiKey}${searchQuery}`)
+
+      .then(response => {
+
+        if (response.data.Search) {
+
+          const moviePromises = response.data.Search.map((movie) =>
+            axios.get(`http://www.omdbapi.com/?apikey=${apiKey}&i=${movie.imdbID}`)
+          );
+
+          Promise.all(moviePromises)
+            .then(responses => {
+              const fullMovieDetails = responses.map(res => res.data);
+              setMovieData(fullMovieDetails);
+            })
+            .catch(error => {
+              console.error('Error fetching full movie details:', error);
+            });
+        } else {
+          setMovieData([]);
+        }
+      })
+
+      .catch(error => {
+
+        console.error('Error fetching movie data:', error);
+      });
   };
-  
+
+
+  useEffect(() => {
+    getMovieData(search);
+  }, [search]);
+
+
+  const handleInputChange = (e) => {
+    setSearch(e.target.value);
+  };
+
   return (
     <div className="App">
-      <div className="container">
-      <input className='mt-5'></input>
+      <div className="container-fluid">
+        <h1 className='text-center text-light'>Movie App <i class="bi bi-camera-reels"></i></h1>
+
+        <div className="input-group mt-2 p-3 w-50">
+        <input className="form-control text-center" placeholder="Search a movie" aria-label="Search a movie" aria-describedby="basic-addon2" onChange={handleInputChange}/>
+        <span className="input-group-text" id="basic-addon2"><i class="bi bi-search"></i></span>
+        </div>
+
         <div className="row">
-          <MovieCard movie={movieData} />
+          {movieData.length > 0 ? (
+            movieData.map((movie) => (
+              <MovieCard key={movie.imdbID} movie={movie} />
+            ))
+          ) : (
+            <p>No movies found.</p>
+          )}
         </div>
       </div>
     </div>
@@ -48,4 +76,3 @@ function App() {
 }
 
 export default App;
-
