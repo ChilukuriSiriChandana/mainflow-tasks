@@ -1,0 +1,66 @@
+/* .App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} */
+
+/* .todo-background {
+  background-image: url("/public/background-image.jpeg");
+  height: 100vh;
+  background-size: cover;
+  
+} */
+
+.todo-background {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.todo-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/public/background-image.jpeg");
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.5); /* Adjust brightness level */
+  z-index: -1; /* Ensure it stays behind other content */
+}
+
