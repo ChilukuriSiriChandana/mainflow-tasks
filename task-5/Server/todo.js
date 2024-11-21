@@ -59,38 +59,6 @@ const url = "mongodb://localhost:27017/";
         })
     });
 
-    // app.delete("/add/:id", (req, res) => {
-    //     console.log("Delete request received for ID:", req.params.id);
-    
-    //     MongoClient.connect(url)
-    //         .then(clientObject => {
-    //             const Database = clientObject.db("MainFlow-Task-5");
-    //             const id = req.params.id;
-    
-    //             Database.collection("todo")
-    //                 .deleteOne({ _id: new ObjectId(id) })
-    //                 .then(result => {
-    //                     if (result.deletedCount === 1) {
-    //                         console.log("Task deleted");
-    //                         res.send({ message: 'Task deleted' });
-    //                     } else {
-    //                         console.log("Task not found");
-    //                         res.status(404).json({ error: "Task not found" });
-    //                     }
-    //                 })
-    //                 .catch(err => {
-    //                     console.error("Error deleting task:", err);
-    //                     res.status(500).json({ error: "Failed to delete task" });
-    //                 })
-    //                 .finally(() => {
-    //                     clientObject.close();
-    //                 });
-    //         })
-    //         .catch(err => {
-    //             console.error("An error occurred:", err);
-    //             res.status(500).json({ error: "Database connection failed" });
-    //         });
-    // });
     
     app.delete("/add/:id", (req, res) => {
         console.log("Delete request received for ID:", req.params.id);
